@@ -1,12 +1,12 @@
-# Fractal Tree
+# Tic Tac Toe
 
-Draw a fractal tree using golang and pixel.
+Tic Tac Toe game made with golang and pixel.
 
-<p align="center">
+<!-- <p align="center">
 	<a href="">
 		<img alt="Game" src="demo.png" width="300px">
 	</a>
-</p>
+</p> -->
 
 ## How to run
 
@@ -15,7 +15,7 @@ Config the \$GOPATH stuff. Clone the repository.
 ```bash
 $ export GOPATH=$HOME/Workspace/go
 $ mkdir -p $GOPATH/src/github.com/rafaellcoellho && cd $GOPATH/src/github.com/rafaellcoellho
-$ git clone git@github.com:rafaellcoellho/fractal-tree.git
+$ git clone git@github.com:rafaellcoellho/tic-tac-toe.git
 ```
 
 Install the libs for pixel:
@@ -27,15 +27,13 @@ $ sudo dnf install libX11-devel libXcursor-devel libXrandr-devel libXinerama-dev
 Get libs
 
 ```bash
-$ cd fractal-tree && go get
+$ cd tic-tac-toe && go get
 ```
 
 Install and run:
 
 ```bash
-$ go install
-$ export PATH=$PATH:$GOPATH/bin
-$ fractal-tree
+$ go run main.go
 ```
 
 ## Author
@@ -44,4 +42,4 @@ $ fractal-tree
 
 ## Reference
 
-- [coding train video](https://www.youtube.com/watch?v=0jjeOYMjmDU)
+- [coding train video](https://www.youtube.com/watch?v=GTWrWM1UsnA)
