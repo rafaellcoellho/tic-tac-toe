@@ -10,14 +10,15 @@ import (
 const (
 	windowHeight = 400
 	windowWidth  = 400
+	circle       = 'O'
+	cross        = 'X'
+	h            = windowHeight / 3
+	w            = windowWidth / 3
 )
 
 func drawBoard() *imdraw.IMDraw {
-	var w float64 = windowWidth / 3
-	var h float64 = windowHeight / 3
-
-	board := imdraw.New(nil)
-	board.Color = colornames.Black
+	boardImDraw := imdraw.New(nil)
+	boardImDraw.Color = colornames.Black
 
 	lines := [4][2]pixel.Vec{
 		{pixel.V(w, 0), pixel.V(w, windowHeight)},
@@ -26,10 +27,44 @@ func drawBoard() *imdraw.IMDraw {
 		{pixel.V(0, h*2), pixel.V(windowWidth, h*2)},
 	}
 	for _, linePoints := range lines {
-		board.Push(linePoints[0], linePoints[1])
-		board.Line(3)
+		boardImDraw.Push(linePoints[0], linePoints[1])
+		boardImDraw.Line(3)
 	}
-	return board
+
+	return boardImDraw
+}
+
+func drawBoardState(state [3][3]string) *imdraw.IMDraw {
+	stateImDraw := imdraw.New(nil)
+	stateImDraw.Color = colornames.Black
+
+	for lineIndex, line := range state {
+		for columnIndex, spot := range line {
+			var x float64 = w*float64(lineIndex) + w/2
+			var y float64 = h*float64(columnIndex) + h/2
+
+			if spot == string(circle) {
+				stateImDraw.Push(
+					pixel.V(x, y),
+				)
+				stateImDraw.Circle(45, 3)
+			} else {
+				var xr float64 = w / 4
+				stateImDraw.Push(
+					pixel.V(x-xr, y-xr),
+					pixel.V(x+xr, y+xr),
+				)
+				stateImDraw.Line(3)
+				stateImDraw.Push(
+					pixel.V(x+xr, y-xr),
+					pixel.V(x-xr, y+xr),
+				)
+				stateImDraw.Line(3)
+			}
+		}
+	}
+
+	return stateImDraw
 }
 
 func run() {
@@ -43,13 +78,18 @@ func run() {
 		panic(err)
 	}
 
-	board := drawBoard()
+	state := [3][3]string{
+		{"X", "O", "O"},
+		{"X", "O", "X"},
+		{"X", "O", "X"},
+	}
+	boardImDraw := drawBoard()
+	stateImDraw := drawBoardState(state)
 
 	for !win.Closed() {
 		win.Clear(colornames.White)
-
-		board.Draw(win)
-
+		boardImDraw.Draw(win)
+		stateImDraw.Draw(win)
 		win.Update()
 	}
 }
