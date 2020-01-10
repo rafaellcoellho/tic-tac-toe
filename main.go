@@ -1,6 +1,9 @@
 package main
 
 import (
+	"math/rand"
+	"time"
+
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
 	"github.com/faiface/pixel/pixelgl"
@@ -10,11 +13,17 @@ import (
 const (
 	windowHeight = 400
 	windowWidth  = 400
-	circle       = 'O'
-	cross        = 'X'
+	circle       = "O"
+	cross        = "X"
 	h            = windowHeight / 3
 	w            = windowWidth / 3
 )
+
+func chooseRandomPlayer() string {
+	rand.Seed(time.Now().UnixNano())
+	players := []string{circle, cross}
+	return players[rand.Intn(len(players))]
+}
 
 func drawBoard() *imdraw.IMDraw {
 	boardImDraw := imdraw.New(nil)
@@ -44,12 +53,12 @@ func drawBoardState(state [3][3]string) *imdraw.IMDraw {
 			var y float64 = windowWidth - (w*float64(lineIndex) + w/2)
 			var x float64 = h*float64(columnIndex) + h/2
 
-			if spot == string(circle) {
+			if spot == circle {
 				stateImDraw.Push(
 					pixel.V(x, y),
 				)
 				stateImDraw.Circle(45, 3)
-			} else {
+			} else if spot == cross {
 				var xr float64 = w / 4
 				stateImDraw.Push(
 					pixel.V(x-xr, y-xr),
@@ -80,10 +89,11 @@ func run() {
 	}
 
 	state := [3][3]string{
-		{"X", "O", "O"},
-		{"X", "O", "X"},
-		{"O", "O", "X"},
+		{"", "", ""},
+		{"", "", ""},
+		{"", "", ""},
 	}
+	// currentPlayer := chooseRandomPlayer()
 	boardImDraw := drawBoard()
 	stateImDraw := drawBoardState(state)
 
