@@ -40,8 +40,9 @@ func drawBoardState(state [3][3]string) *imdraw.IMDraw {
 
 	for lineIndex, line := range state {
 		for columnIndex, spot := range line {
-			var x float64 = w*float64(lineIndex) + w/2
-			var y float64 = h*float64(columnIndex) + h/2
+			// make 0,0 top left, not bottom left
+			var y float64 = windowWidth - (w*float64(lineIndex) + w/2)
+			var x float64 = h*float64(columnIndex) + h/2
 
 			if spot == string(circle) {
 				stateImDraw.Push(
@@ -81,7 +82,7 @@ func run() {
 	state := [3][3]string{
 		{"X", "O", "O"},
 		{"X", "O", "X"},
-		{"X", "O", "X"},
+		{"O", "O", "X"},
 	}
 	boardImDraw := drawBoard()
 	stateImDraw := drawBoardState(state)
