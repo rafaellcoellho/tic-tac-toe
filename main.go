@@ -1,8 +1,7 @@
 package main
 
 import (
-	"math/rand"
-	"time"
+	"fmt"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
@@ -18,12 +17,6 @@ const (
 	h            = windowHeight / 3
 	w            = windowWidth / 3
 )
-
-func chooseRandomPlayer() string {
-	rand.Seed(time.Now().UnixNano())
-	players := []string{circle, cross}
-	return players[rand.Intn(len(players))]
-}
 
 func drawBoard() *imdraw.IMDraw {
 	boardImDraw := imdraw.New(nil)
@@ -93,13 +86,48 @@ func run() {
 		{"", "", ""},
 		{"", "", ""},
 	}
-	// currentPlayer := chooseRandomPlayer()
+	currentPlayer := cross
+
 	boardImDraw := drawBoard()
-	stateImDraw := drawBoardState(state)
 
 	for !win.Closed() {
+
+		if win.JustPressed(pixelgl.MouseButtonLeft) {
+			x := win.MousePosition().X
+			y := win.MousePosition().Y
+
+			if currentPlayer == cross {
+				currentPlayer = circle
+			} else {
+				currentPlayer = cross
+			}
+
+			var columnIndex int
+			var lineIndex int
+
+			if x < w {
+				columnIndex = 0
+			} else if x > w && x < w*2 {
+				columnIndex = 1
+			} else {
+				columnIndex = 2
+			}
+
+			if y < h {
+				lineIndex = 2
+			} else if y > h && y < h*2 {
+				lineIndex = 1
+			} else {
+				lineIndex = 0
+			}
+
+			fmt.Println(columnIndex, lineIndex)
+			state[lineIndex][columnIndex] = currentPlayer
+		}
+
 		win.Clear(colornames.White)
 		boardImDraw.Draw(win)
+		stateImDraw := drawBoardState(state)
 		stateImDraw.Draw(win)
 		win.Update()
 	}
