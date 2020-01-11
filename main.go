@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"image/color"
 
 	"github.com/faiface/pixel"
 	"github.com/faiface/pixel/imdraw"
@@ -36,9 +36,8 @@ func drawBoard() *imdraw.IMDraw {
 	return boardImDraw
 }
 
-func drawBoardState(state [3][3]string) *imdraw.IMDraw {
+func drawBoardState(state [3][3]string, crossColor, circleColor color.RGBA) *imdraw.IMDraw {
 	stateImDraw := imdraw.New(nil)
-	stateImDraw.Color = colornames.Black
 
 	for lineIndex, line := range state {
 		for columnIndex, spot := range line {
@@ -47,11 +46,13 @@ func drawBoardState(state [3][3]string) *imdraw.IMDraw {
 			var x float64 = h*float64(columnIndex) + h/2
 
 			if spot == circle {
+				stateImDraw.Color = circleColor
 				stateImDraw.Push(
 					pixel.V(x, y),
 				)
 				stateImDraw.Circle(45, 3)
 			} else if spot == cross {
+				stateImDraw.Color = crossColor
 				var xr float64 = w / 4
 				stateImDraw.Push(
 					pixel.V(x-xr, y-xr),
@@ -133,6 +134,8 @@ func run() {
 
 	boardImDraw := drawBoard()
 	result := ""
+	circleColor := colornames.Black
+	crossColor := colornames.Black
 
 	for !win.Closed() {
 		if result == "" && win.JustPressed(pixelgl.MouseButtonLeft) {
@@ -170,13 +173,20 @@ func run() {
 
 		win.Clear(colornames.White)
 		boardImDraw.Draw(win)
-		stateImDraw := drawBoardState(state)
+		stateImDraw := drawBoardState(state, crossColor, circleColor)
 		stateImDraw.Draw(win)
 		win.Update()
 
 		result = checkWinner(state)
 		if result != "" {
-			fmt.Println(result)
+			if result == "X" {
+				crossColor = colornames.Red
+			} else if result == "O" {
+				circleColor = colornames.Red
+			} else {
+				crossColor = colornames.Green
+				circleColor = colornames.Green
+			}
 		}
 	}
 }
