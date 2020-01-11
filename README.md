@@ -2,11 +2,11 @@
 
 Tic Tac Toe game made with golang and pixel.
 
-<!-- <p align="center">
+<p align="center">
 	<a href="">
 		<img alt="Game" src="demo.png" width="300px">
 	</a>
-</p> -->
+</p>
 
 ## How to run
 
