@@ -70,6 +70,49 @@ func drawBoardState(state [3][3]string) *imdraw.IMDraw {
 	return stateImDraw
 }
 
+func blankStateExist(state [3][3]string) bool {
+	for _, line := range state {
+		for _, spot := range line {
+			if spot == "" {
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func checkWinner(state [3][3]string) string {
+	winner := ""
+
+	for i := 0; i < 3; i++ {
+		if state[i][0] == state[i][1] && state[i][1] == state[i][2] {
+			winner = state[i][0]
+			break
+		}
+	}
+
+	for i := 0; i < 3; i++ {
+		if state[0][i] == state[1][i] && state[1][i] == state[2][i] {
+			winner = state[0][i]
+			break
+		}
+	}
+
+	if state[0][0] == state[1][1] && state[1][1] == state[2][2] {
+		winner = state[0][0]
+	}
+
+	if state[0][2] == state[1][1] && state[1][1] == state[2][0] {
+		winner = state[0][2]
+	}
+
+	if winner == "" && !blankStateExist(state) {
+		return "tie"
+	}
+
+	return winner
+}
+
 func run() {
 	cfg := pixelgl.WindowConfig{
 		Title:  "tic-tac-toe",
@@ -89,18 +132,12 @@ func run() {
 	currentPlayer := cross
 
 	boardImDraw := drawBoard()
+	result := ""
 
 	for !win.Closed() {
-
-		if win.JustPressed(pixelgl.MouseButtonLeft) {
+		if result == "" && win.JustPressed(pixelgl.MouseButtonLeft) {
 			x := win.MousePosition().X
 			y := win.MousePosition().Y
-
-			if currentPlayer == cross {
-				currentPlayer = circle
-			} else {
-				currentPlayer = cross
-			}
 
 			var columnIndex int
 			var lineIndex int
@@ -121,8 +158,14 @@ func run() {
 				lineIndex = 0
 			}
 
-			fmt.Println(columnIndex, lineIndex)
-			state[lineIndex][columnIndex] = currentPlayer
+			if state[lineIndex][columnIndex] == "" {
+				state[lineIndex][columnIndex] = currentPlayer
+				if currentPlayer == cross {
+					currentPlayer = circle
+				} else {
+					currentPlayer = cross
+				}
+			}
 		}
 
 		win.Clear(colornames.White)
@@ -130,6 +173,11 @@ func run() {
 		stateImDraw := drawBoardState(state)
 		stateImDraw.Draw(win)
 		win.Update()
+
+		result = checkWinner(state)
+		if result != "" {
+			fmt.Println(result)
+		}
 	}
 }
 
