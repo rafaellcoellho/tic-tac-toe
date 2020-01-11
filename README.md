@@ -4,7 +4,7 @@ Tic Tac Toe game made with golang and pixel.
 
 <p align="center">
 	<a href="">
-		<img alt="Game" src="demo.png" width="300px">
+		<img alt="Game" src="demo.png" width="200px">
 	</a>
 </p>
 
